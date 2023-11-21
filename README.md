@@ -1,4 +1,4 @@
-# DCSA RMC - Reefer Monitoring Commercial
+# DCSA RMO - Reefer Monitoring Operational
 
 **[RECOMMENDED]** <br>
 Setup a Github Personal Access Token as mentioned [here](https://github.com/dcsaorg/DCSA-Core/blob/master/README.md#how-to-use-dcsa-core-packages).

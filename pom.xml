@@ -8,12 +8,12 @@
 		<version>1.5-SNAPSHOT</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>org.dcsa.rmc</groupId>
-	<artifactId>dcsa-rmc-parent</artifactId>
+	<groupId>org.dcsa.rmo</groupId>
+	<artifactId>dcsa-rmo-parent</artifactId>
 	<version>${revision}${sha1}${changelist}</version>
 	<packaging>pom</packaging>
 	<name>${project.name}</name>
-	<description>${project.name} Reefer Monitoring Commercial </description>
+	<description>${project.name} Reefer Monitoring Operational</description>
 
 	<properties>
 		<!-- Define DCSA-Project version -->
@@ -30,9 +30,9 @@
 		<!-- End: Define Shared kernel version -->
 
 		<hibernate-types.version>2.21.1</hibernate-types.version>
-		<group.id>org.dcsa.rmc</group.id>
-		<artifact.id>dcsa-rmc</artifact.id>
-		<project.name>DCSA-RMC</project.name>
+		<group.id>org.dcsa.rmo</group.id>
+		<artifact.id>dcsa-rmo</artifact.id>
+		<project.name>DCSA-RMO</project.name>
 	</properties>
 
 	<modules>
