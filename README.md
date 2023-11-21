@@ -1,4 +1,4 @@
-# DCSA Project Template
+# DCSA RMC - Reefer Monitoring Commercial
 
 **[RECOMMENDED]** <br>
 Setup a Github Personal Access Token as mentioned [here](https://github.com/dcsaorg/DCSA-Core/blob/master/README.md#how-to-use-dcsa-core-packages).
@@ -12,8 +12,8 @@ Setup a Github Personal Access Token as mentioned [here](https://github.com/dcsa
 - Update GitHub Actions
 
 ### Checklist to setup the `template` for your project:
-- [ ] Rename the project, DCSA-{ProjectName} (e.g. DCSA-TNT)
-- [ ] `DCSA-Project-Template > pom.xml`
+- [x] Rename the project, DCSA-{ProjectName} (e.g. DCSA-TNT)
+- [x] `DCSA-Project-Template > pom.xml`
   ```xml
    <groupId>org.dcsa.template</groupId>
    <artifactId>dcsa-template-parent</artifactId>
@@ -24,7 +24,7 @@ Setup a Github Personal Access Token as mentioned [here](https://github.com/dcsa
         <project.name>DCSA Template</project.name>
 	  </properties>
   ```
-- [ ] `DCSA-Project-Template > domain > pom.xml`
+- [x] `DCSA-Project-Template > domain > pom.xml`
   ```xml
     <parent>
         <groupId>org.dcsa.template</groupId>
@@ -32,7 +32,7 @@ Setup a Github Personal Access Token as mentioned [here](https://github.com/dcsa
         ...
     </parent>
   ```
-- [ ] `DCSA-Project-Template > transfer-obj > pom.xml`
+- [x] `DCSA-Project-Template > transfer-obj > pom.xml`
   ```xml
     <parent>
         <groupId>org.dcsa.template</groupId>
@@ -40,7 +40,7 @@ Setup a Github Personal Access Token as mentioned [here](https://github.com/dcsa
         ...
     </parent>
   ```
-- [ ] `DCSA-Project-Template > service > pom.xml`
+- [x] `DCSA-Project-Template > service > pom.xml`
   ```xml
     <parent>
         <groupId>org.dcsa.template</groupId>
@@ -48,7 +48,7 @@ Setup a Github Personal Access Token as mentioned [here](https://github.com/dcsa
         ...
     </parent>
   ```
-- [ ] `DCSA-Project-Template > application > pom.xml`
+- [x] `DCSA-Project-Template > application > pom.xml`
   ```xml
     <parent>
         <groupId>org.dcsa.template</groupId>
@@ -56,8 +56,8 @@ Setup a Github Personal Access Token as mentioned [here](https://github.com/dcsa
         ...
     </parent>
   ```
-- [ ] Rename package `DCSA-Project-Template > application > src > main > java > org.dcsa.template`
-- [ ] `DCSA-Project-Template > application > src > main > resources > application.yml`
+- [x] Rename package `DCSA-Project-Template > application > src > main > java > org.dcsa.template`
+- [x] `DCSA-Project-Template > application > src > main > resources > application.yml`
   ```yaml
     spring:
       application:
@@ -65,11 +65,11 @@ Setup a Github Personal Access Token as mentioned [here](https://github.com/dcsa
       datasource:
         url: jdbc:postgresql://${db_hostname}/dcsa_template
   ```
-- [ ] `DCSA-Project-Template > Dockerfile`
+- [x] `DCSA-Project-Template > Dockerfile`
   ```dockerfile
   COPY application/target/dcsa-template-application.jar .
   ```
-- [ ] `DCSA-Project-Template > docker-compose.yml`
+- [x] `DCSA-Project-Template > docker-compose.yml`
   ```yaml
     dcsa-template:
       container_name: dcsa_template

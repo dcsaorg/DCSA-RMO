@@ -2,8 +2,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.dcsa.template</groupId>
-		<artifactId>dcsa-template-parent</artifactId>
+		<groupId>org.dcsa.rmc</groupId>
+		<artifactId>dcsa-rmc-parent</artifactId>
 		<version>${revision}${sha1}${changelist}</version>
 	</parent>
 

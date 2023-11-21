@@ -4,10 +4,10 @@ dcsa:
 
 spring:
   application:
-    name: dcsa-template
+    name: dcsa-rmc
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${db_hostname}/dcsa_template
+    url: jdbc:postgresql://${db_hostname}/dcsa_rmc
     username: dcsa_db_owner
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect

@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   dcsa-template:
-    container_name: dcsa_template
+    container_name: dcsa_rmc
     build:
       .
     ports:
@@ -24,7 +24,7 @@ services:
 
   dcsa-test-db:
     image: postgres:15-alpine
-    container_name: dcsa_template_db
+    container_name: dcsa_rmc_db
     environment:
       POSTGRES_PASSWORD: "change_this_password"
     volumes:
