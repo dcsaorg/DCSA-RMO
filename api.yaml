@@ -1,0 +1,874 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0-Beta-1
+  title: DCSA OpenAPI specification for Operational Reefer Monitoring
+  description: |-
+    Exchange data uniformly on data collected from live reefers between operational supply chain partners such as carriers, terminals and vessel operators.
+
+    For explanation to specific values or objects please refer to the [Information Model 2024.Q1](https://dcsa.org/wp-content/uploads/2024/01/DCSA-Information-Model-2023.Q4.pdf).
+
+    ## Poll model
+    Polling data can be done using
+
+        GET /v1/events
+
+    Calling this endPoint will return a list of events that fulfill the query parameters specified. The list returned is sorted in ascending (`ASC`) order based on the creation date-time of the event (`eventCreatedDateTime`). **This endPoint is mandatory to implement.**
+
+    For a changelog please click [here](https://github.com/dcsaorg/DCSA-OpenAPI/blob/master/rmo/v1#v100B1). Please also [create a GitHub issue](https://github.com/dcsaorg/DCSA-OpenAPI/issues/new) if you have any questions/comments.
+  contact:
+    name: Digital Container Shipping Association (DCSA)
+    email: info@dcsa.org
+    url: 'https://dcsa.org'
+  license:
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+    name: Apache 2.0
+paths:
+  /events:
+    get:
+      tags:
+        - Events
+      summary: Retrieve Reefer Information
+      description: Fetch the current monitoring data available for reefer container fleet
+      operationId: fetchReefer
+      parameters:
+        - $ref: '#/components/parameters/Event_domain_v3_1_0_EventDateTime'
+        - $ref: '#/components/parameters/Event_domain_v3_1_0_EquipmentReference'
+        - schema:
+            type: boolean
+          in: query
+          name: activeControllerAlarms
+          description: Will filter by all live reefers with one or more active alarms
+        - $ref: '#/components/parameters/CommonComponents_APIVersionHeader'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/reeferResponse'
+              examples:
+                'Reefer data related to equipmentReference: ''APZU4812090''':
+                  description: |
+                    To retrieve the reefer data for a specific `equipmentReference` the following request could be made:
+
+                        GET /events?equipmentReference=APZU4812090
+                  value:
+                    alarms:
+                      activeAlarmCount: 0
+                      activeAlarms:
+                        - alarmDate: '2023-10-23T15:40:28Z'
+                          alarmNumber: N999
+                          alarmSeverity: ALARM
+                    controller:
+                      dateTime: '2023-10-23T15:40:28Z'
+                      hardwareVersion: 1.1.1
+                      maker: '900'
+                      model: N99
+                      operatingState: '1'
+                      serialNumber: '123456789'
+                      softwareVersion: 1.1.1
+                    equipmentReference: APZU4812090
+                    equipmentOptions:
+                      - N00
+                      - N05
+                    geoLocation:
+                      latitude: '48.858550'
+                      longitude: '2.294492'
+                    isConnectedToPowerSource: true
+                    lastDefrostDateTime: '2023-10-23T15:40:28Z'
+                    measurements:
+                      ambientTemperature: 12
+                      temperature: 5
+                      temperatureUnit: CEL
+                      o2: 20
+                      co2: 25
+                      relativeHumidity: 98
+                      airExchange: 0
+                      airExchangeUnit: MQH
+                      cargoProbe1Temperature: 6
+                      cargoProbe2Temperature: 6
+                      cargoProbe3Temperature: 6
+                      currentPhaseA: 15
+                      currentPhaseB: 15
+                      currentPhaseC: 15
+                      dischargePressure: 21
+                      dischargeTemperature: 10
+                      evaporatorTemperature: 10
+                      lineFrequency: 60
+                      lineVoltage: 400
+                      returnProbe1Temperature: 10
+                      returnProbe2Temperature: 10
+                      returnTemperature: 10
+                      suctionPressure: 60
+                      suctionTemperature: 10
+                      supplySensor1Temperature: 10
+                      supplySensor2Temperature: 10
+                      supplyTemperature: 10
+                    setpoints:
+                      temperature: -15
+                      temperatureUnit: CEL
+                      o2: 20
+                      co2: 25
+                      humidity: 96
+                    reeferSettings:
+                      controlledAtmosphereMode: 'ON'
+                      isDefrosting: false
+                      efficiencySetting: 2
+                    unitModel: N00
+                    device:
+                      deviceDateTime: '2023-12-10T10:34:12Z'
+                      model: '100'
+                      receivedDateTime: '2023-12-10T10:34:12Z'
+                      isDeviceConnectedToPower: true
+                      brand: '2'
+                    inspection:
+                      - inspectionType: REMOTE
+                        inspectionDate: '2023-12-10T10:34:12Z'
+                        expiryDate: '2023-12-10T10:34:12Z'
+                        inspectionResult: PASSED
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error_domain_v3_0_0_Error'
+tags:
+  - name: Events
+    description: Event operations
+components:
+  schemas:
+    reeferResponse:
+      type: object
+      properties:
+        alarms:
+          $ref: '#/components/schemas/alarms'
+        controller:
+          $ref: '#/components/schemas/controller'
+        equipmentReference:
+          $ref: '#/components/schemas/Dcsa_domain_v3_1_0_EquipmentReference'
+        equipmentOptions:
+          $ref: '#/components/schemas/equipmentOptions'
+        geoLocation:
+          $ref: '#/components/schemas/geoLocation'
+        isConnectedToPowerSource:
+          type: boolean
+          description: |-
+            Indicates if the source is connected to power.
+
+            COA UDM Key: P2
+        lastDefrostDateTime:
+          $ref: '#/components/schemas/lastDefrostDateTime'
+        measurements:
+          $ref: '#/components/schemas/measurements'
+        setpoints:
+          $ref: '#/components/schemas/setpoints'
+        reeferSettings:
+          $ref: '#/components/schemas/reeferSettings'
+        unitModel:
+          $ref: '#/components/schemas/unitModel'
+        device:
+          $ref: '#/components/schemas/device'
+        inspection:
+          type: array
+          description: Can contain a Physical and Remote Inspection detail as needed
+          items:
+            $ref: '#/components/schemas/inspection'
+      required:
+        - controller
+        - equipmentReference
+        - isConnectedToPowerSource
+        - measurements
+        - setpoints
+        - reeferSettings
+        - device
+    alarms:
+      type: object
+      properties:
+        activeAlarmCount:
+          type: integer
+          description: The number of active alarms from the controller
+        activeAlarms:
+          type: array
+          items:
+            type: object
+            properties:
+              alarmDate:
+                type: string
+                description: The datetime of when the alarm first appeared
+                format: date-time
+              alarmNumber:
+                type: string
+                description: Harmonised Alarm Code across all Manufacturers
+              alarmSeverity:
+                type: string
+                description: |-
+                  An indicator of the severity of the alarm being reported.  Possible values are:
+                  * `CRITICAL` risk to cargo and the equipment, requires intervention
+                  * `ALARM` possible risk to cargo, investigation required
+                  * `WARNING` warning of an abnormal situation, little or no change to operational running
+                  * `LOG` informational only, recorded in the datalog but no on the display.
+                example: CRITICAL
+            required:
+              - alarmDate
+              - alarmNumber
+    controller:
+      type: object
+      description: |-
+        A reefer container electronic component,
+        which acquires information from sensors and operates the
+        refrigerated container through commands. Information on
+        measurements and state in a controller can be extracted
+        electronically via communication channels by an external
+        device.
+      properties:
+        dateTime:
+          $ref: '#/components/schemas/controllerDateTime'
+        hardwareVersion:
+          $ref: '#/components/schemas/controllerHardwareVersion'
+        maker:
+          $ref: '#/components/schemas/controllerMaker'
+        model:
+          $ref: '#/components/schemas/controllerModel'
+        operatingState:
+          $ref: '#/components/schemas/controllerOperatingState'
+        serialNumber:
+          $ref: '#/components/schemas/controllerSerialNumber'
+        softwareVersion:
+          $ref: '#/components/schemas/controllerSoftwareVersion'
+      required:
+        - dateTime
+        - maker
+        - model
+        - operatingState
+    controllerDateTime:
+      type: string
+      description: |-
+        The datetime from the controller device.
+
+        COA UDM Key: P15
+      format: date-time
+      example: '2023-12-10T10:34:12Z'
+    controllerHardwareVersion:
+      type: string
+      description: The hardware revision of the controller device
+    controllerMaker:
+      type: string
+      description: |-
+        The manufacturers of source equipment such as reefer controllers.
+
+        COA UDM Key: P13
+      example: '100'
+    controllerModel:
+      type: string
+      description: |-
+        The model of the controller from the maker.
+
+        COA UDM Key: P14
+    controllerOperatingState:
+      type: string
+      description: |-
+        The controller operating state, specific to the type of controller.
+
+        COA UDM Key: P12
+      example: '2'
+    controllerSerialNumber:
+      type: string
+      description: The serial number of the controller device
+    controllerSoftwareVersion:
+      type: string
+      description: The software version running on the controller device
+    equipmentOptions:
+      type: array
+      description: List of equipment options available on the container
+      items:
+        type: string
+    geoLocation:
+      type: object
+      properties:
+        latitude:
+          $ref: '#/components/schemas/latitude'
+        longitude:
+          $ref: '#/components/schemas/longitude'
+    lastDefrostDateTime:
+      type: string
+      description: The end time of the past defrost period
+      format: date-time
+    latitude:
+      type: string
+      pattern: '^[+-]?[0-9]{1,3}\.[0-9]{1,6}$'
+      maxLength: 10
+      description: |
+        Geographic coordinate that specifies the north–south position of a point on the Earth&apos;s surface.
+      example: '48.858550'
+    longitude:
+      type: string
+      pattern: '^[+-]?[0-9]{1,3}\.[0-9]{1,6}$'
+      maxLength: 11
+      description: |
+        Geographic coordinate that specifies the east–west position of a point on the Earth&apos;s surface.
+      example: '2.294492'
+    measurements:
+      type: object
+      title: Measurements
+      properties:
+        ambientTemperature:
+          $ref: '#/components/schemas/measuredAmbientTemperature'
+        temperature:
+          $ref: '#/components/schemas/measuredTemperature'
+        temperatureUnit:
+          $ref: '#/components/schemas/temperatureUnit'
+        o2:
+          $ref: '#/components/schemas/measuredO2'
+        co2:
+          $ref: '#/components/schemas/measuredCo2'
+        relativeHumidity:
+          $ref: '#/components/schemas/measuredHumidity'
+        airExchange:
+          $ref: '#/components/schemas/measuredAirExchange'
+        airExchangeUnit:
+          $ref: '#/components/schemas/airExchangeUnit'
+        cargoProbe1Temperature:
+          type: number
+          format: float
+          example: 6
+          description: |-
+            The temperature of USDA Probe 1.
+
+            COA UDM Key: P19
+        cargoProbe2Temperature:
+          type: number
+          format: float
+          example: 6
+          description: |-
+            The temperature of USDA Probe 2.
+
+            COA UDM Key: P20
+        cargoProbe3Temperature:
+          type: number
+          format: float
+          example: 6
+          description: |-
+            The temperature of USDA Probe 3.
+
+            COA UDM Key: P21
+        cargoProbe4Temperature:
+          type: number
+          format: float
+          description: |
+            The temperature of Probe 4.
+        currentPhaseA:
+          $ref: '#/components/schemas/currentPhaseA'
+        currentPhaseB:
+          $ref: '#/components/schemas/currentPhaseB'
+        currentPhaseC:
+          $ref: '#/components/schemas/currentPhaseC'
+        dischargePressure:
+          $ref: '#/components/schemas/dischargePressure'
+        dischargeTemperature:
+          $ref: '#/components/schemas/dischargeTemperature'
+        evaporatorTemperature:
+          $ref: '#/components/schemas/evaporatorTemperature'
+        lineFrequency:
+          $ref: '#/components/schemas/lineFrequency'
+        lineVoltage:
+          $ref: '#/components/schemas/lineVoltage'
+        returnProbe1Temperature:
+          $ref: '#/components/schemas/returnProbe1Temperature'
+        returnProbe2Temperature:
+          $ref: '#/components/schemas/returnProbe2Temperature'
+        returnTemperature:
+          $ref: '#/components/schemas/returnTemperature'
+        suctionPressure:
+          $ref: '#/components/schemas/suctionPressure'
+        suctionTemperature:
+          $ref: '#/components/schemas/suctionTemperature'
+        supplySensor1Temperature:
+          $ref: '#/components/schemas/supplySensor1Temperature'
+        supplySensor2Temperature:
+          $ref: '#/components/schemas/supplySensor2Temperature'
+        supplyTemperature:
+          $ref: '#/components/schemas/supplyTemperature'
+      required:
+        - ambientTemperature
+        - temperature
+        - temperatureUnit
+        - o2
+        - co2
+        - relativeHumidity
+        - cargoProbe1Temperature
+        - cargoProbe2Temperature
+        - cargoProbe3Temperature
+        - returnTemperature
+        - supplySensor1Temperature
+        - supplySensor2Temperature
+        - supplyTemperature
+    measuredAmbientTemperature:
+      type: number
+      description: |
+        The measured value of the ambient temperature of the Reefer.
+
+        COA UDM Key: P6
+      format: float
+      example: -15
+    measuredTemperature:
+      type: number
+      description: |
+        The measured value of the temperature of the Reefer.
+
+        COA UDM Key: P22
+      format: float
+      example: -15
+    temperatureUnit:
+      enum:
+        - CEL
+        - FAH
+      description: |
+        The unit for temperature in Celsius or Fahrenheit
+
+        - CEL (Celsius)
+        - FAH (Fahrenheit)
+      example: CEL
+    measuredO2:
+      type: number
+      description: |-
+        The measured value of the controlled atmosphere value in percent
+
+        COA UDM Key: P10
+      format: float
+      minimum: 0
+      maximum: 100
+      example: 75.3
+    measuredCo2:
+      type: number
+      description: |
+        The measured value of the controlled atmosphere value in percent.
+
+        COA UDM Key: P8
+      format: float
+      minimum: 0
+      maximum: 100
+      example: 75.3
+    measuredHumidity:
+      type: number
+      description: |-
+        The measured value of the controlled atmosphere humidity value. in percent
+
+
+        COA UDM Key: P7
+      format: float
+      minimum: 0
+      maximum: 100
+      example: 95.6
+    measuredAirExchange:
+      type: number
+      description: |
+        The measured value for the air exchange rate which is the rate at which outdoor air replaces indoor air within a Reefer container
+      format: float
+      minimum: 0
+      example: 15.4
+    airExchangeUnit:
+      enum:
+        - MQH
+        - FQH
+      description: |
+        The unit for `airExchange` in metrics- or imperial- units per hour
+
+        - MQH (Cubic metre per hour)
+        - FQH (Cubic foot per hour)
+
+        **NB:** This is a conditional field. If `airExchange` is specified then this field is required
+      example: MQH
+    currentPhaseA:
+      type: number
+      description: The phase A current or average current in Amps
+      format: float
+    currentPhaseB:
+      type: number
+      description: The phase B current or average current in Amps
+      format: float
+    currentPhaseC:
+      type: number
+      description: The phase C current or average current in Amps
+      format: float
+    dischargePressure:
+      type: number
+      description: The discharge pressure in BarRelative units
+      format: float
+    dischargeTemperature:
+      type: number
+      description: The discharge temperature
+      format: float
+      example: -15
+    evaporatorTemperature:
+      type: number
+      description: The evaporator temperature in CEL
+      format: float
+    lineFrequency:
+      type: number
+      description: The mains power frequency in Hz
+      format: float
+      example: 50
+    lineVoltage:
+      type: number
+      description: The mains power voltage in volts
+      format: float
+      example: 400
+    returnProbe1Temperature:
+      type: number
+      description: |-
+        The return temperature of probe 1.
+
+        COA UDM Key: P115
+      format: float
+      example: -15
+    returnProbe2Temperature:
+      type: number
+      description: |-
+        The return temperature of probe 2.
+
+        COA UDM Key: P116
+      format: float
+      example: -15
+    returnTemperature:
+      type: number
+      description: |-
+        The return temperature.
+
+        COA UDM Key: P5
+      format: float
+      example: -15
+    suctionPressure:
+      type: number
+      description: The suction pressure in BarRelative units
+      format: float
+    suctionTemperature:
+      type: number
+      description: The suction temperature
+      format: float
+      example: -15
+    supplySensor1Temperature:
+      type: number
+      description: |-
+        The supply sensor 1 temperature.
+
+        COA UDM Key: P16
+      format: float
+      example: -15
+    supplySensor2Temperature:
+      type: number
+      description: |-
+        The supply sensor 2 temperature.
+
+        COA UDM Key: P17
+      format: float
+      example: -15
+    supplyTemperature:
+      type: number
+      description: |-
+        The supply temperature.
+
+        COA UDM Key: P4
+      format: float
+      example: -15
+    setpoints:
+      type: object
+      properties:
+        temperature:
+          $ref: '#/components/schemas/measuredTemperature'
+        temperatureUnit:
+          $ref: '#/components/schemas/temperatureUnit'
+        o2:
+          $ref: '#/components/schemas/measuredO2'
+        co2:
+          $ref: '#/components/schemas/measuredCo2'
+        humidity:
+          type: number
+          description: |
+            The percentage of the controlled atmosphere humidity target value
+          format: float
+          minimum: 0
+          maximum: 100
+          example: 95.6
+      required:
+        - temperature
+        - temperatureUnit
+        - o2
+        - co2
+    reeferSettings:
+      type: object
+      properties:
+        controlledAtmosphereMode:
+          $ref: '#/components/schemas/controlledAtmosphereMode'
+        isDefrosting:
+          $ref: '#/components/schemas/isDefrosting'
+        efficiencySetting:
+          $ref: '#/components/schemas/efficiencySetting'
+      required:
+        - controlledAtmosphereMode
+    controlledAtmosphereMode:
+      type: string
+      description: |-
+        The controlled atmosphere mode setting.
+
+        COA UDM Key: P18
+    isDefrosting:
+      type: boolean
+      description: Indicates if the device is defrosting
+    efficiencySetting:
+      type: number
+      description: The efficiency Setting (controller specific) COA UDM List 5.5.8
+    unitModel:
+      type: string
+      description: 'The unit model specific to the maker, COA UDM 5.5.3 code list'
+    device:
+      title: device
+      type: object
+      description: |-
+        An IoT device which connects wirelessly to a
+        network and has an ability to transmit data. Types of devices
+        vary based on installation location (external/internal),
+        life cycle (single trip/permanent), etc. In this particular
+        document only, a “device” is part of the equipment of
+        a container. A device part of a refrigerated container is
+        connected to the controller
+      properties:
+        deviceDateTime:
+          type: string
+          format: date-time
+          description: UTC time automatically set by a wireless device or similar
+          example: '2023-12-10T10:34:12Z'
+        model:
+          type: string
+          description: The model type name of the device
+          example: '100'
+        receivedDateTime:
+          type: string
+          description: The time the recording was received by the Data Holder cloud system
+          example: '2023-12-10T10:34:12Z'
+        isDeviceConnectedToPower:
+          type: boolean
+          description: Indicates if the device is connected to power
+          example: true
+        brand:
+          type: string
+          description: The brand name of the device
+          example: '2'
+      required:
+        - deviceDateTime
+        - model
+        - receivedDateTime
+        - isDeviceConnectedToPower
+    inspection:
+      title: inspection
+      type: object
+      description: Details about the 'Physical PTI' or 'Smart PTI' that takes place during a trip
+      properties:
+        inspectionType:
+          type: string
+          description: Would either be `PHYSICAL` PTI or a `REMOTE` PTI performed during a trip
+          example: REMOTE
+        inspectionDate:
+          type: string
+          format: date-time
+          example: '2023-12-10T10:34:12Z'
+          description: The date of the inspection
+        expiryDate:
+          type: string
+          format: date-time
+          example: '2023-12-10T10:34:12Z'
+          description: 'The expiry date of the remote inspection '
+        inspectionResult:
+          type: string
+          description: indicates if the inspection `PASSED` or `FAILED' or requires a `CHECK`
+          example: PASSED
+      required:
+        - inspectionType
+        - inspectionDate
+        - inspectionResult
+    Dcsa_domain_v3_1_0_EquipmentReference:
+      type: string
+      pattern: ^\S+(\s+\S+)*$
+      maxLength: 11
+      description: |
+        The unique identifier for the equipment, which should follow the BIC ISO Container Identification Number where possible.
+        According to [ISO 6346](https://en.wikipedia.org/wiki/ISO_6346), a container identification code consists of a 4-letter prefix and a 7-digit number (composed of a 3-letter owner code, a category identifier, a serial number, and a check-digit).
+
+        If a container does not comply with [ISO 6346](https://en.wikipedia.org/wiki/ISO_6346), it is suggested to follow [Recommendation #2: Containers with non-ISO identification](https://smdg.org/documents/smdg-recommendations) from SMDG.
+      example: APZU4812090
+    Error_domain_v3_0_0_DetailedError:
+      type: object
+      title: Detailed Error
+      properties:
+        errorCode:
+          type: integer
+          format: int32
+          description: |
+            The detailed error code returned.
+
+              - `7000-7999` Technical error codes
+              - `8000-8999` Functional error codes
+              - `9000-9999` API provider-specific error codes
+
+            [Error codes as specified by DCSA](https://dcsa.atlassian.net/wiki/spaces/DTG/pages/197132308/Standard+Error+Codes).
+          minimum: 7000
+          maximum: 9999
+          example: 7003
+        property:
+          type: string
+          maxLength: 100
+          description: |
+            The name of the property causing the error.
+          example: facilityCode
+        value:
+          type: string
+          maxLength: 500
+          description: |
+            The value of the property causing the error serialised as a string exactly as in the original request.
+          example: SG SIN WHS
+        jsonPath:
+          type: string
+          maxLength: 500
+          description: |
+            A path to the property causing the error, formatted according to [JSONpath](https://github.com/json-path/JsonPath).
+          example: $.location.facilityCode
+        errorCodeText:
+          description: |
+            A standard short description corresponding to the `errorCode`.
+          type: string
+          maxLength: 100
+          example: invalidData
+        erorCodeMessage:
+          type: string
+          maxLength: 200
+          description: |
+            A long description corresponding to the `errorCode` with additional information.
+          example: Spaces not allowed in facility code
+      required:
+        - errorCodeText
+        - errorCodeMessage
+    Error_domain_v3_0_0_Error:
+      type: object
+      properties:
+        httpMethod:
+          description: |
+            The HTTP method used to make the request e.g. `GET`, `POST`, etc
+          type: string
+          example: POST
+          enum:
+            - GET
+            - HEAD
+            - POST
+            - PUT
+            - DELETE
+            - OPTION
+            - PATCH
+        requestUri:
+          description: |
+            The URI that was requested.
+          type: string
+          example: /v1/events
+        statusCode:
+          description: |
+            The HTTP status code returned.
+          type: integer
+          format: int32
+          example: 400
+        statusCodeText:
+          description: |
+            A standard short description corresponding to the HTTP status code.
+          type: string
+          maxLength: 50
+          example: Bad Request
+        statusCodeMessage:
+          description: |
+            A long description corresponding to the HTTP status code with additional information.
+          type: string
+          maxLength: 200
+          example: The supplied data could not be accepted
+        providerCorrelationReference:
+          description: |
+            A unique identifier to the HTTP request within the scope of the API provider.
+          type: string
+          maxLength: 100
+          example: 4426d965-0dd8-4005-8c63-dc68b01c4962
+        errorDateTime:
+          description: |
+            The DateTime corresponding to the error occuring. Must be formatted using [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
+          type: string
+          format: date-time
+          example: '2019-11-12T07:41:00+08:30'
+        errors:
+          type: array
+          description: |
+            An array of errors provding more detail about the root cause.
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/Error_domain_v3_0_0_DetailedError'
+      required:
+        - httpMethod
+        - requestUri
+        - statusCode
+        - statusCodeText
+        - errorDateTime
+        - errors
+    EventDateTime:
+      type: string
+      format: date-time
+      description: |
+        The local date and time, when the event took place or when the event will take place, in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
+      example: '2019-11-12T07:41:00+08:30'
+    3_0_EquipmentReference:
+      type: string
+      pattern: ^\S+(\s+\S+)*$
+      maxLength: 11
+      description: |
+        The unique identifier for the equipment, which should follow the BIC ISO Container Identification Number where possible.
+        According to ISO 6346, a container identification code consists of a 4-letter prefix and a 7-digit number (composed of a 3-letter owner code, a category identifier, a serial number, and a check-digit).
+
+        If a container does not comply with ISO 6346, it is suggested to follow [Recommendation #2: Containers with non-ISO identification](https://smdg.org/documents/smdg-recommendations) from SMDG.
+      example: APZU4812090
+  parameters:
+    Event_domain_v3_1_0_EquipmentReference:
+      in: query
+      name: equipmentReference
+      description: |
+        Will filter by the unique identifier for the equipment, which should follow the BIC ISO Container Identification Number where possible.
+
+        Specifying this filter will only return events related to this particular `equipmentReference`
+      required: false
+      schema:
+        $ref: '#/components/schemas/3_0_EquipmentReference'
+    Event_domain_v3_1_0_EventDateTime:
+      in: query
+      name: eventDateTime
+      description: |
+        Limit the result based on when the event will happen or has happened. It is possible to use operators on this query parameter. This is done by adding a colon (`:`) followed by an operator at the end of the queryParameterName (before the equal (`=`))
+
+            eventDateTime:gte=2021-04-01T14:12:56-01:00
+
+        would result in all events happened and will happen &#8805; 2021-04-01T14&#58;12&#58;56-01&#58;00
+
+        The following operators are supported
+        - `:gte` (&#8805; Greater than or equal)
+        - `:gt` (&#62; Greater than)
+        - `:lte` (&#8804; Less than or equal)
+        - `:lt` (&#60; Less than)
+        - `:eq` (&#61; Equal to)
+        ## Ranges
+        In order to `specify a range` the query parameter needs to be used twice with different operators. If multiple operators are used with this query parameter a logical `AND` is to be used between the operators. So for the following filter:
+
+            eventDateTime:gte=2021-04-01T14:12:56-01:00 & eventDateTime:lte=2021-04-03T14:12:56-01:00
+
+        Will result in events within the 2 days range (48 hours) specified. The events matched **MUST** have happened or will happen within the date range greater than (`≥`) 2021-04-**01**T14&#58;12&#58;56-01&#58;00 `AND` less than (`≤`) 2021-04-**03**T14&#58;12&#58;56-01&#58;00
+
+        If no operator is provided, a **strictly equal** is used (this is equivalent to `:eq` operator).
+      required: false
+      example: '2021-04-01T14:12:56-01:00'
+      schema:
+        $ref: '#/components/schemas/EventDateTime'
+    CommonComponents_APIVersionHeader:
+      name: API-Version
+      in: header
+      description: SemVer used to indicate the version of the contract (API version) returned.
+      schema:
+        type: string

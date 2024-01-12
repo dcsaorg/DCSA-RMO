@@ -29,16 +29,12 @@
 		<shared-kernel.version>${dcsa.shared-kernel.version}${dcsa.shared-kernel.tag}${dcsa.shared-kernel.artifacttype}</shared-kernel.version>
 		<!-- End: Define Shared kernel version -->
 
-		<hibernate-types.version>2.21.1</hibernate-types.version>
 		<group.id>org.dcsa.rmo</group.id>
 		<artifact.id>dcsa-rmo</artifact.id>
 		<project.name>DCSA-RMO</project.name>
 	</properties>
 
 	<modules>
-		<module>transfer-obj</module>
-		<module>domain</module>
-		<module>service</module>
 		<module>application</module>
 	</modules>
 
@@ -56,22 +52,6 @@
 				<groupId>com.vladmihalcea</groupId><!-- Support for json and jsonb data types in hibernate/JPA -->
 				<artifactId>hibernate-types-60</artifactId>
 				<version>${hibernate-types.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>${group.id}</groupId>
-				<artifactId>transfer-obj</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>${group.id}</groupId>
-				<artifactId>domain</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>${group.id}</groupId>
-				<artifactId>service</artifactId>
-				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.dcsa.shared-kernel</groupId>
