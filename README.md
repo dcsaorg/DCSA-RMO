@@ -1,91 +1,16 @@
 # DCSA RMO - Reefer Monitoring Operational
 
-**[RECOMMENDED]** <br>
-Setup a Github Personal Access Token as mentioned [here](https://github.com/dcsaorg/DCSA-Core/blob/master/README.md#how-to-use-dcsa-core-packages).
+## Build and Run the Project
 
-- Rename the project
-- Update the README.md
-- Update the pom.xml
-- Update the application.yml
-- Update the Dockerfile
-- Update the docker-compose.yml file
-- Update GitHub Actions
-
-### Checklist to setup the `template` for your project:
-- [x] Rename the project, DCSA-{ProjectName} (e.g. DCSA-TNT)
-- [x] `DCSA-Project-Template > pom.xml`
-  ```xml
-   <groupId>org.dcsa.template</groupId>
-   <artifactId>dcsa-template-parent</artifactId>
-
-   <properties>
-        <group.id>org.dcsa.template</group.id>
-        <artifact.id>dcsa-template</artifact.id>
-        <project.name>DCSA Template</project.name>
-	  </properties>
-  ```
-- [x] `DCSA-Project-Template > domain > pom.xml`
-  ```xml
-    <parent>
-        <groupId>org.dcsa.template</groupId>
-        <artifactId>dcsa-template-parent</artifactId>
-        ...
-    </parent>
-  ```
-- [x] `DCSA-Project-Template > transfer-obj > pom.xml`
-  ```xml
-    <parent>
-        <groupId>org.dcsa.template</groupId>
-        <artifactId>dcsa-template-parent</artifactId>
-        ...
-    </parent>
-  ```
-- [x] `DCSA-Project-Template > service > pom.xml`
-  ```xml
-    <parent>
-        <groupId>org.dcsa.template</groupId>
-        <artifactId>dcsa-template-parent</artifactId>
-        ...
-    </parent>
-  ```
-- [x] `DCSA-Project-Template > application > pom.xml`
-  ```xml
-    <parent>
-        <groupId>org.dcsa.template</groupId>
-        <artifactId>dcsa-template-parent</artifactId>
-        ...
-    </parent>
-  ```
-- [x] Rename package `DCSA-Project-Template > application > src > main > java > org.dcsa.template`
-- [x] `DCSA-Project-Template > application > src > main > resources > application.yml`
-  ```yaml
-    spring:
-      application:
-        name: dcsa-template
-      datasource:
-        url: jdbc:postgresql://${db_hostname}/dcsa_template
-  ```
-- [x] `DCSA-Project-Template > Dockerfile`
-  ```dockerfile
-  COPY application/target/dcsa-template-application.jar .
-  ```
-- [x] `DCSA-Project-Template > docker-compose.yml`
-  ```yaml
-    dcsa-template:
-      container_name: dcsa_template
-
-    dcsa-test-db:
-      container_name: dcsa_template_db
-  ```
-
-#### Build and Run the Project
-```shell
+```
 mvn clean package
 
-docker-compose up -d -V --build
+java -jar application/target/dcsa-rmo-application.jar
 
-curl http://localhost:9090/actuator/health
+curl http://localhost:9090/rmo/v3/events?equipmentReference=APZU4812090
 ```
 
-#### Creating a Repository from the Template
-https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template#creating-a-repository-from-a-template
+## Security Considerations
+
+This reference implementation does not do any authentication/authorization and should not be used in production as is. Using this as is in production would expose data for all parties to all other parties without checking whether they should have access.
+
